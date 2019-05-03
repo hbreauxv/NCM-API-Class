@@ -1,4 +1,4 @@
-from NCM_API import NCMRouterConfig
+from ncm import NCMRouterConfig
 
 # fill these in with your NCM headers
 headers = {

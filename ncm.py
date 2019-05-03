@@ -8,7 +8,7 @@ import requests
 import json
 
 
-class NCMRouterConfig(object):
+class RouterConfig(object):
     """
     The NCMRouterConfig class is a mechanism to make communicating with the NCM APIv2 simpler.  Instances of this class
     use the requests library to communicate with the NCM APIv2.
@@ -49,7 +49,7 @@ class NCMRouterConfig(object):
             try:
                 get = requests.get(url, headers=self.headers)
                 response[router_ids[response_number]] = get
-                response_number +=1
+                response_number += 1
             except Exception as e:
                 print('Exception in get() with %s: ' + str(e) % router_ids[response_number])
                 response_number += 1
@@ -77,7 +77,7 @@ class NCMRouterConfig(object):
         # put payload to every configuration manager uri and store the response in a dictionary
         for url in config_url_list:
             try:
-                put = requests.put(url, data=json.dumps(payload), headers = self.headers)
+                put = requests.put(url, data=json.dumps(payload), headers=self.headers)
                 response[router_ids[response_number]] = put
                 response_number += 1
             except Exception as e:
@@ -107,7 +107,7 @@ class NCMRouterConfig(object):
         # put payload to every configuration manager uri
         for url in config_url_list:
             try:
-                patch = requests.patch(url, data=json.dumps(payload), headers = self.headers)
+                patch = requests.patch(url, data=json.dumps(payload), headers=self.headers)
                 response[router_ids[response_number]] = patch
                 response_number += 1
             except Exception as e:
