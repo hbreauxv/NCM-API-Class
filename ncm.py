@@ -10,7 +10,7 @@ import json
 
 class RouterConfig(object):
     """
-    The NCMRouterConfig class is a mechanism to make communicating with the NCM APIv2 simpler.  Instances of this class
+    The RouterConfig class is a mechanism to make communicating with the NCM APIv2 simpler.  Instances of this class
     use the requests library to communicate with the NCM APIv2.
     """
 
@@ -45,6 +45,7 @@ class RouterConfig(object):
         response = {}
         response_number = 0
 
+        # get configuration for every router and store the response in a dictionary
         for url in config_url_list:
             try:
                 get = requests.get(url, headers=self.headers)
