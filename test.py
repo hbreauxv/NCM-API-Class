@@ -2,10 +2,10 @@ from ncm import RouterConfig
 
 # fill these in with your NCM headers
 headers = {
-    'X-CP-API-ID': '80780c4c',
-    'X-CP-API-KEY': '0c384093805172f14a99670d96b8f190',
-    'X-ECM-API-ID': 'de622bc9-3fdc-452d-88b7-4cefc1463b5b',
-    'X-ECM-API-KEY': 'c1630ff4f2a0f765919bec5005e13bb90d9f7b39',
+    'X-CP-API-ID': 'your cp api id here',
+    'X-CP-API-KEY': 'your cp api key here',
+    'X-ECM-API-ID': 'your ecm api id here',
+    'X-ECM-API-KEY': 'your ecm api key here',
     'Content-Type': 'application/json'
 }
 
