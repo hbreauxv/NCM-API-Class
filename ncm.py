@@ -54,6 +54,7 @@ class RouterConfig(object):
                 try:
                     # get the configuration for the router
                     get = s.get(url)
+                    # store the response
                     response[router_ids[response_number]] = get
                     response_number += 1
 
@@ -122,12 +123,15 @@ class RouterConfig(object):
         with requests.Session() as s:
             s.headers.update(self.headers)
 
-            # put payload to every configuration manager uri
+            # patch payload to every configuration manager uri
             for url in config_url_list:
                 try:
+                    # patch payload to the router
                     patch = requests.patch(url, data=json.dumps(payload), headers=self.headers)
+                    # store the response
                     response[router_ids[response_number]] = patch
                     response_number += 1
+
                 except Exception as e:
                     print('Exception in patch() with %s: ' + str(e) % router_ids[response_number])
                     response_number += 1
