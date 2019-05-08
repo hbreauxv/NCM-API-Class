@@ -45,15 +45,21 @@ class RouterConfig(object):
         response = {}
         response_number = 0
 
-        # get configuration for every router and store the response in a dictionary
-        for url in config_url_list:
-            try:
-                get = requests.get(url, headers=self.headers)
-                response[router_ids[response_number]] = get
-                response_number += 1
-            except Exception as e:
-                print('Exception in get() with %s: ' + str(e) % router_ids[response_number])
-                response_number += 1
+        # open a session to NCM
+        with requests.Session() as s:
+            s.headers.update(self.headers)
+
+            # get configuration for every router and store the response in a dictionary
+            for url in config_url_list:
+                try:
+                    # get the configuration for the router
+                    get = s.get(url)
+                    response[router_ids[response_number]] = get
+                    response_number += 1
+
+                except Exception as e:
+                    print('Exception in get(): %s' + str(e) % router_ids[response_number])
+                    response_number += 1
 
         return response
 
@@ -75,15 +81,22 @@ class RouterConfig(object):
         response = {}
         response_number = 0
 
-        # put payload to every configuration manager uri and store the response in a dictionary
-        for url in config_url_list:
-            try:
-                put = requests.put(url, data=json.dumps(payload), headers=self.headers)
-                response[router_ids[response_number]] = put
-                response_number += 1
-            except Exception as e:
-                print('Exception in put() with %s: ' + str(e) % router_ids[response_number])
-                response_number += 1
+        # open a session to NCM
+        with requests.Session() as s:
+            s.headers.update(self.headers)
+
+            # put payload to every configuration manager uri and store the response in a dictionary
+            for url in config_url_list:
+                try:
+                    # put the payload to the router
+                    put = s.put(url, data=json.dumps(payload))
+                    # store the response
+                    response[router_ids[response_number]] = put
+                    response_number += 1
+
+                except Exception as e:
+                    print('Exception in put() with %s: ' + str(e) % router_ids[response_number])
+                    response_number += 1
 
         return response
 
@@ -105,15 +118,19 @@ class RouterConfig(object):
         response = {}
         response_number = 0
 
-        # put payload to every configuration manager uri
-        for url in config_url_list:
-            try:
-                patch = requests.patch(url, data=json.dumps(payload), headers=self.headers)
-                response[router_ids[response_number]] = patch
-                response_number += 1
-            except Exception as e:
-                print('Exception in patch() with %s: ' + str(e) % router_ids[response_number])
-                response_number += 1
+        # open a session to NCM
+        with requests.Session() as s:
+            s.headers.update(self.headers)
+
+            # put payload to every configuration manager uri
+            for url in config_url_list:
+                try:
+                    patch = requests.patch(url, data=json.dumps(payload), headers=self.headers)
+                    response[router_ids[response_number]] = patch
+                    response_number += 1
+                except Exception as e:
+                    print('Exception in patch() with %s: ' + str(e) % router_ids[response_number])
+                    response_number += 1
 
         return response
 
@@ -133,24 +150,25 @@ class RouterConfig(object):
         self.make_list(router_ids)
         config_url_list = []
 
-        try:
-            for router_id in router_ids:
-                # Access the routers endpoint for the router
-                url = "https://www.cradlepointecm.com/api/v2/routers/{}/".format(router_id)
-                routers = requests.get(url, headers=self.headers)
-                # load response as a python dictionary
-                routers = json.loads(routers.content.decode("utf-8"))
+        # open a session to NCM
+        with requests.Session() as s:
+            s.headers.update(self.headers)
 
-                try:
-                    # get the configuration_managers id url for each router
-                    url = routers['configuration_manager']
-                    config_id = requests.get(url, headers=self.headers)
-                    config_id = json.loads(config_id.content.decode("utf-8"))
-                    config_url_list.append(config_id["resource_uri"])
-                except Exception as e:
-                    print(e)
-        except Exception as e:
-            print(e)
+            try:
+                for router_id in router_ids:
+                    # Access the routers endpoint for the router
+                    url = "https://www.cradlepointecm.com/api/v2/routers/{}/".format(router_id)
+                    routers = s.get(url)
+                    # extract the configuration_manager id url
+                    url = routers.json()['configuration_manager']
+
+                    # do a get on the configuration_manager so that we can extract the configuration_managers url
+                    config_id = s.get(url)
+                    # append the configuration_managers url(the resource uri) to our config_url_list
+                    config_url_list.append(config_id.json()["resource_uri"])
+
+            except Exception as e:
+                print(e)
 
         return config_url_list
 
