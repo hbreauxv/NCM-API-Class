@@ -1,4 +1,4 @@
-from ncm import NCMRouterConfig
+from ncm import RouterConfig
 
 # fill these in with your NCM headers
 headers = {
@@ -13,7 +13,7 @@ headers = {
 payload = \
     {
         "configuration": [{
-            "example": "this wont work because it ncm wont like it"
+            "example": "this wont work because ncm wont like it"
 
         },
             []
@@ -22,7 +22,7 @@ payload = \
 
 
 # this is a test get. replace the router IDs in here with some of the router IDs in your NCM account.
-NCMTesting = NCMRouterConfig(headers)
+NCMTesting = RouterConfig(headers)
 result = NCMTesting.get([1111976,695606])
 
 print(result[1111976])
